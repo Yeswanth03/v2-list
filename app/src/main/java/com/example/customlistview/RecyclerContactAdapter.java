@@ -3,6 +3,7 @@ package com.example.customlistview;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.BreakIterator;
+import java.util.Random;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,7 +51,7 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
         holder.txtname.setText(arrContacts.get(position).name);
         holder.txtnum.setText(arrContacts.get(position).number);
 
-        holder.llRow.setOnClickListener(new View.OnClickListener() {
+        holder.realmodify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Dialog dialog = new Dialog(context);
@@ -92,7 +95,37 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
             }
         });
 
+        holder.llRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.displaytotp);
 
+
+                TextView txtviewtotp;
+                txtviewtotp=dialog.findViewById(R.id.txtviewtotp);
+                Random random = new Random();
+                txtviewtotp.setText(""+random.nextInt(100000-10000)+1);
+
+                TextView timer;
+                timer= dialog.findViewById(R.id.timer);
+                 new CountDownTimer(3000, 1000) {
+                    @Override
+                    public void onTick(long l) {
+                        timer.setText( ""+l/1000);
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        txtviewtotp.setText(""+random.nextInt(1000000-100000)+1);
+                        dialog.dismiss();
+                    }
+                }.start();
+
+                dialog.show();
+            }
+        });
 
         holder.btndel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,6 +166,9 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
         ImageView imagecontact;
         LinearLayout llRow;
         Button btndel;
+        Button realmodify;
+        TextView timer;
+        TextView txtviewtotp;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -143,6 +179,9 @@ public class RecyclerContactAdapter extends RecyclerView.Adapter<RecyclerContact
             imagecontact = itemView.findViewById(R.id.imgcontact);
             llRow = itemView.findViewById(R.id.llrow);
             btndel = itemView.findViewById(R.id.btndel);
+            realmodify = itemView.findViewById(R.id.realmodify);
+            timer = itemView.findViewById(R.id.timer);
+            txtviewtotp = itemView.findViewById(R.id.txtviewtotp);
         }
     }
 }
